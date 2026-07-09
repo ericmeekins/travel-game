@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>旅游目的地盲盒</title>
+    <style>
+        body { text-align: center; font-family: sans-serif; background: #f4f4f9; }
+        .grid { display: grid; grid-template-columns: repeat(3, 120px); gap: 20px; justify-content: center; margin-top: 30px; }
+        .box { width: 120px; height: 120px; background: #6b7d5a; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 10px; transition: 0.3s; font-size: 16px; font-weight: bold; }
+        /* 关键：显示图片时让文字变为白色，加一点阴影保证在图片上看得清 */
+        .box.open { background-size: cover; background-position: center; color: white; text-shadow: 1px 1px 3px black; }
+        .btn { display: none; margin-top: 20px; padding: 10px 20px; background: #FF4500; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; }
+        .reset-btn { margin-top: 20px; padding: 8px 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>探索你的下一个旅行地</h1>
+    <div class="grid" id="grid">
+        <div class="box" onclick="openBox(this, 0)">?</div>
+        <div class="box" onclick="openBox(this, 1)">?</div>
+        <div class="box" onclick="openBox(this, 2)">?</div>
+        <div class="box" onclick="openBox(this, 3)">?</div>
+        <div class="box" onclick="openBox(this, 4)">?</div>
+        <div class="box" onclick="openBox(this, 5)">?</div>
+    </div>
+    <br>
+    <a id="link" class="btn" href="#">立即预订</a>
+    <br>
+    <button class="reset-btn" onclick="resetGame()">重新洗牌，再玩一次</button>
+
+    <script>
+        const destinations = [
+            { name: "东京", img: "./images/tokyo.webp", url: "#tokyo" },
+            { name: "巴黎", img: "./images/paris.webp", url: "#paris" },
+            { name: "曼谷", img: "./images/bangkok.webp", url: "#bangkok" },
+            { name: "纽约", img: "./images/nyc.webp", url: "#nyc" },
+            { name: "伦敦", img: "./images/london.webp", url: "#london" },
+            { name: "迪拜", img: "./images/dubai.webp", url: "#dubai" }
+        ];
+
+        let shuffledDestinations = [];
+
+        // 初始化游戏
+        function initGame() {
+            shuffledDestinations = [...destinations].sort(() => Math.random() - 0.5);
+        }
+
+        function openBox(el, index) {
+            if (el.classList.contains('open')) return;
+            
+            const dest = shuffledDestinations[index];
+            el.classList.add('open');
+            el.style.backgroundImage = `url('${dest.img}')`;
+            el.innerText = dest.name; // 现在文字会显示出来
+            
+            const linkBtn = document.getElementById('link');
+            linkBtn.style.display = 'inline-block';
+            linkBtn.href = dest.url;
+            linkBtn.innerText = `预订 ${dest.name} 之旅`;
+        }
+
+        function resetGame() {
+            initGame();
+            const boxes = document.querySelectorAll('.box');
+            boxes.forEach(box => {
+                box.classList.remove('open');
+                box.style.backgroundImage = 'none';
+                box.innerText = '?';
+            });
+            document.getElementById('link').style.display = 'none';
+        }
+
+        // 页面启动时初始化
+        initGame();
+    </script>
+</body>
+</html>
